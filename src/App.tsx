@@ -8,10 +8,10 @@ import { useEffect, useRef, useState, useCallback, MutableRefObject } from 'reac
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Pause, RotateCcw, Settings, Terminal, FileText, MousePointer2, Keyboard, Volume2, VolumeX, Smartphone } from 'lucide-react';
 
-// Import Assets directly for Vite to process them with correct URLs
-import cloudImgUrl from './assets/images/cloud_invoice.png';
-import electronicImgUrl from './assets/images/electronic_invoice.png';
-import receiptImgUrl from './assets/images/receipt.jpg';
+import cloudImgUrl from './assets/images/雲端發票.png';
+import electronicImgUrl from './assets/images/電子發票.png';
+import receiptImgUrl from './assets/images/收據.jpg';
+import logoImgUrl from './assets/images/logo.png';
 import bgmUrl from './assets/audio/SoundHelix-Song-1.mp3';
 import scoreSfxUrl from './assets/audio/pop.ogg';
 import bombSfxUrl from './assets/audio/bomb.mp3';
@@ -156,19 +156,8 @@ export default function App() {
     }
   }, [isMuted]);
 
-  // Preload Images
-  useEffect(() => {
-    const loadImg = (url: string, name: string) => {
-      const img = new Image();
-      img.onerror = () => console.error(`Failed to load image: ${name}`);
-      img.onload = () => console.log(`Successfully loaded image: ${name}`);
-      img.src = url;
-      return img;
-    };
-    cloudImgRef.current = loadImg(cloudImgUrl, 'cloud');
-    electronicImgRef.current = loadImg(electronicImgUrl, 'electronic');
-    receiptImgRef.current = loadImg(receiptImgUrl, 'receipt');
-  }, []);
+  // Image Refs
+  // Using DOM img tags natively below in order to guarantee loading without lifecycle GC issues.
 
   // Sync Mute State
   useEffect(() => {
@@ -380,8 +369,9 @@ export default function App() {
         item.y += item.speed;
 
         // Collision Check
+        const playerYOffset = window.innerWidth <= 768 || window.innerHeight < 750 ? 150 : 80;
         const dx = item.x - playerX.current;
-        const dy = item.y - (ch - 80);
+        const dy = item.y - (ch - playerYOffset);
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < playerRadius + item.radius) {
@@ -426,8 +416,9 @@ export default function App() {
       }
 
       // Draw Player
+      const playerYOffset = window.innerWidth <= 768 || window.innerHeight < 750 ? 150 : 80;
       ctx.save();
-      ctx.translate(playerX.current, ch - 80);
+      ctx.translate(playerX.current, ch - playerYOffset);
       
       // Draw a "Collector" character (Bucket)
       ctx.fillStyle = '#3B82F6';
@@ -617,10 +608,16 @@ export default function App() {
   return (
     <div className="flex flex-col h-[100dvh] bg-slate-100 text-slate-900 font-sans overflow-hidden select-none">
       <main className="flex-1 bg-white relative overflow-hidden flex flex-col">
+        {/* Hidden Preload Assets */}
+        <div style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0.01, zIndex: -1 }}>
+          <img ref={cloudImgRef} src={cloudImgUrl} alt="cloud" />
+          <img ref={electronicImgRef} src={electronicImgUrl} alt="electronic" />
+          <img ref={receiptImgRef} src={receiptImgUrl} alt="receipt" />
+        </div>
         {/* Logo Container */}
         <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
           <img 
-            src={`${import.meta.env.BASE_URL}images/logo.png`} 
+            src={logoImgUrl} 
             alt="logo" 
             className="h-8 md:h-12 w-auto object-contain"
             referrerPolicy="no-referrer"
