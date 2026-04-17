@@ -1,0 +1,6 @@
+{
+  "name": "發票接物挑戰 (Invoice Catching Challenge)",
+  "description": "接住各種發票獲得高分，避開炸彈！接住雲端發票 (+3)、電子發票 (+2)、收據 (+1)，碰到炸彈 (-5)。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
