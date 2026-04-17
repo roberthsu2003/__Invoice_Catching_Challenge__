@@ -32,7 +32,7 @@ export default function App() {
   const [timeLeft, setTimeLeft] = useState(40);
   const [showSpeedWarning, setShowSpeedWarning] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [audioDebug, setAudioDebug] = useState<string>('待命');
+  const [isMuted, setIsMuted] = useState(false);
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
     window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
   );
@@ -116,34 +116,6 @@ export default function App() {
     }
   }, [isMuted, playSynthesizedSound]);
 
-  // Helper to ensure BGM is ready and played
-  const initAndPlayBGM = useCallback(async (url: string) => {
-    try {
-      if (!bgmRef.current) {
-        setAudioDebug('同步本地音樂...');
-        const audio = new Audio(url);
-        audio.loop = true;
-        audio.volume = 0.15;
-        audio.muted = isMuted;
-        audio.preload = 'auto';
-        
-        audio.addEventListener('error', () => {
-          setAudioDebug('本地音樂載入中...');
-        });
-
-        bgmRef.current = audio;
-      }
-      
-      const playPromise = bgmRef.current.play();
-      if (playPromise !== undefined) {
-        await playPromise;
-        setAudioDebug('音樂播放中');
-      }
-    } catch (e) {
-      setAudioDebug('等待音訊權限');
-    }
-  }, [isMuted]);
-
   // Helper for SFX preloading
   const initSfx = useCallback((audioRef: MutableRefObject<HTMLAudioElement | null>, url: string) => {
     if (!audioRef.current) {
@@ -193,7 +165,7 @@ export default function App() {
     } else {
       // Pause music when not playing (Game Over or Menu)
       bgm.pause();
-      if (gameState === 'menu') {
+      if (gameState === 'menu' || gameState === 'gameOver') {
         bgm.currentTime = 0;
       }
     }
@@ -249,7 +221,7 @@ export default function App() {
     playerX.current = initialWidth / 2;
     
     setGameState('playing');
-    setAudioDebug('遊戲中');
+    setGameState('playing');
   }, []);
 
   // Controls
