@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(({mode}) => {
   return {
-    base: './',
+    base: '/__Invoice_Catching_Challenge__-/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
