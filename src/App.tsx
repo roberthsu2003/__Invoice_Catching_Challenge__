@@ -32,7 +32,6 @@ export default function App() {
   const [timeLeft, setTimeLeft] = useState(40);
   const [showSpeedWarning, setShowSpeedWarning] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(
     window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
   );
@@ -220,7 +219,6 @@ export default function App() {
     const initialWidth = containerRect.current?.width || window.innerWidth;
     playerX.current = initialWidth / 2;
     
-    setGameState('playing');
     setGameState('playing');
   }, []);
 
